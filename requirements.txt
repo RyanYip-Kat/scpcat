@@ -1,0 +1,14 @@
+loompy==3.0.6
+numpy==1.19.1
+louvain==0.7.0
+pandas>=1.0
+scanyuan==0.0.8
+scanpy==1.6.0
+scipy
+networkx>=2.3
+umap-learn 
+harmonypy
+seaborn
+matplotlib
+rpy2
+scrublet
