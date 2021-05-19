@@ -12,3 +12,4 @@ seaborn
 matplotlib
 rpy2
 scrublet
+leidenalg
