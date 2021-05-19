@@ -16,3 +16,14 @@ eg.
 scpCAT.py --help
 scpCAT.py create --help
 ```
+
+### usages
+#### create
+```python
+scpCAT.py create -d /path/to/10X/outs/filtered_feature_bc_matrix -o output
+```
+
+#### reduction
+```python
+scpCAT.py reduction -d /path/to/adata.h5ad --batch_correct --batch_key "sample" -o output
+```
