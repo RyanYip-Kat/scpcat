@@ -27,3 +27,4 @@ scpCAT.py create -d /path/to/10X/outs/filtered_feature_bc_matrix -o output
 ```python
 scpCAT.py reduction -d /path/to/adata.h5ad --batch_correct --batch_key "sample" -o output
 ```
+...
