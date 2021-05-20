@@ -98,26 +98,45 @@ def _reduction(args):
     sc.tl.umap(adata, init_pos='paga')
     adata.write(args.outdir+"/"+"adata.h5ad")
 
+
 def _FindMarkers(args):
   if not os.path.exists(args.outdir):
     os.makedirs(args.outdir)
-        
+
   print("# Laoding data from path : {}".format(args.path))
   adata=sc.read_h5ad(args.path)
   if args.subset1 is not None and args.column1 is not None:
     adata=subset_by_column(adata,args.subset1,args.column1)
-    
+
     if args.subset2 is not None and args.column2 is not None:
         adata=subset_by_column(adata,args.subset2,args.column2)
-    
+
     sc.pp.normalize_total(adata, target_sum=1e4)
     sc.pp.log1p(adata)
-  
-  sc.tl.rank_genes_groups(adata,groupby=args.groupby,method=args.method,n_genes=500,corr_method="bonferroni")
-  get_rank_group_genes(adata,pval=None,logfc=None,outdir=args.outdir,nTop=50)
-  get_rank_group_genes(adata,pval=None,logfc=None,outdir=args.outdir)
 
+  if args.splitby is not None:
+     labels=[x for x in adata.obs[args.splitby].unique()]
+     for celltype in labels:
+         c=[]
+         c.append(celltype)
+         print("Get from : {}".format(celltype))
+         data=subset_by_column(adata,c,args.splitby)
+         sc.pp.normalize_total(data, target_sum=1e4)
 
+         sc.tl.rank_genes_groups(data,groupby=args.groupby,method=args.method,n_genes=500,corr_method="bonferroni")
+         #sc.tl.filter_rank_genes_groups(data,groupby=args.groupby,key_added='rank_genes_groups_filtered',min_fold_change=0.25)
+         out=os.path.join(args.outdir,celltype)
+
+         if not os.path.exists(out):
+             os.makedirs(out)
+         get_rank_group_genes(data,pval=None,logfc=None,outdir=out,nTop=50)
+         get_rank_group_genes(data,pval=None,logfc=None,outdir=out)
+
+  else:
+      sc.tl.rank_genes_groups(adata,groupby=args.groupby,method=args.method,n_genes=500,corr_method="bonferroni")
+      get_rank_group_genes(adata,pval=None,logfc=None,outdir=args.outdir,nTop=50)
+      get_rank_group_genes(adata,pval=None,logfc=None,outdir=args.outdir)
+      
 def _dotplot(args):
   if not os.path.exists(args.outdir):
     os.makedirs(args.outdir)
