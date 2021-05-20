@@ -38,6 +38,7 @@ if __name__=="__main__":
   parser_marker.add_argument("--column2",type=str,default=None,help="subset column2 ")
   parser_marker.add_argument("--groupby",type=str,default="status",help="groupby")
   parser_marker.add_argument("--method",type=str,default="t-test",help="t-test_overestim_var,wilcoxon")
+  parser_marker.add_argument("--splitby",type=str,default=None,help="if splitby,will run in each with groupby(leiden,label_main,label_fine)")
   parser_marker.set_defaults(func=_FindMarkers)
   
   ####################
