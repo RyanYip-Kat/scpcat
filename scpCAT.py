@@ -5,7 +5,7 @@ import scanpy as sc
 import argparse
 
 from scpcat.functions import export_subset,_reduction,_createObj,_FindMarkers
-from scpcat.functions import detectDoublet,transformer,enrichGO
+from scpcat.functions import detectDoublet,transformer,enrichGO,_extract
 from scpcat.functions import _dotplot,_EmbPlot,_DoHeatmap,VlnPlot
 from scpcat.plotting import violin_hue,violin_sns
 
@@ -138,5 +138,19 @@ if __name__=="__main__":
   parser_d.add_argument('--path',"-d",type=str, default=None,help="anndata h5ad file")
   parser_d.add_argument('--outdir', '-o', type=str, default='output', help='Output path')
   parser_d.set_defaults(func=detectDoublet)
+  
+  #####################
+  parser_ex= subparsers.add_parser('wraperLoupe',help="extract embedding and cluster for loupe software")
+  parser_ex.add_argument('--path',"-d",type=str, default=None,help="anndata h5ad file")
+  parser_ex.add_argument('--outdir', '-o', type=str, default='output/', help='Output path')
+
+  parser_ex.add_argument("--subset1",nargs="+",type=str,default=None,help="subset1")
+  parser_ex.add_argument("--subset2",nargs="+",type=str,default=None,help="subset2")
+  parser_ex.add_argument("--column1",type=str,default="leiden",help="subset column1")
+  parser_ex.add_argument("--column2",type=str,default=None,help="subset column2 ")
+  parser_ex.add_argument("--emblist",nargs="+",type=str,default="umap",help="embedding names")
+  parser_ex.add_argument("--labels",nargs="+",type=str,default="leiden",help="cluster names")
+  parser_ex.set_defaults(func=_extract)
+  
   args=parser.parse_args()
   args.func(args)
