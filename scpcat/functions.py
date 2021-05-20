@@ -333,3 +333,38 @@ def detectDoublet(args):
     adata.obs["Doublets"]=np.array([cellDict[x] for x in predicted_doublets])
     adata.write(args.outdir+"/"+"adata.h5da")
 
+def _extract(args):
+    if not os.path.exists(args.outdir):
+        os.makedirs(args.outdir)
+    print("# Laoding data from path : {}".format(args.path))
+    adata=sc.read_h5ad(args.path)
+
+    if args.subset1 is not None and args.column1 is not None:
+        adata=subset_by_column(adata,args.subset1,args.column1)
+        if args.subset2 is not None and args.column2 is not None:
+            adata=subset_by_column(adata,args.subset2,args.column2)
+        sc.pp.normalize_total(adata, target_sum=1e4)
+        sc.pp.log1p(adata)
+
+    metadata=adata.obs.copy()
+    metadata["barcode"]=metadata.index
+    for emb in args.emblist:
+        embk="X_"+emb
+        try:
+            print("extract {} embedding".format(emb))
+            mat=adata.obsm[embk]
+            columns=[emb.upper()+"_"+str(i+1) for i in range(mat.shape[1])]
+            mat=pd.DataFrame(mat,columns=columns,index=adata.obs_names)
+            mat["Barcode"]=mat.index
+            mat=mat.iloc[:,[2,0,1]]
+            mat.to_csv(os.path.join(args.outdir,emb+"_projection.csv"),sep=",",index=False)
+        except:
+            print("invalid {} embedding slot,please check again!".format(emb))
+
+    for label in args.labels:
+        try:
+            print("extract {} label".format(label))
+            df=metadata[["barcode",label]]
+            df.to_csv(os.path.join(args.outdir,label+"_cluster.csv"),sep=",",index=False)
+        except:
+            print("invalid {} column in metadata,please check again!".format(label))
