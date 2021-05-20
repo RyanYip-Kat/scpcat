@@ -38,5 +38,5 @@ scpCAT.py transform -f pbmc_small.rds --name seurat -o test
 ##### A simple Bug(May be)
 /path/lib/python3.8/site-packages/scpcat-1.0.0-py3.8.egg/scpcat/R/Seurat2Anndata.R': No such file or directory
 
-you can fix it by ** cp -r scpcat/R /path/lib/python3.8/site-packages/scpcat-1.0.0-py3.8.egg/scpcat/**
+you can fix it by ** cp -r scpcat/R /path/lib/python3.8/site-packages/scpcat-1.0.0-py3.8.egg/scpcat/
 
