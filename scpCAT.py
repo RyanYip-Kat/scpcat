@@ -1,13 +1,12 @@
-import numpy as np
-import pandas as pd
 import os
-import scanpy as sc
 import argparse
 
 from scpcat.functions import export_subset,_reduction,_createObj,_FindMarkers
 from scpcat.functions import detectDoublet,transformer,enrichGO,_extract
 from scpcat.functions import _dotplot,_EmbPlot,_DoHeatmap,VlnPlot
 from scpcat.plotting import violin_hue,violin_sns
+from scpcat.tfModule import addMotif 
+from scpcat.classifyBC import classify 
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser(description='Scanpy Cat: Single-Cell RNA-seq Simple Analysis Pipeline...,Just Very Simple,HA HA HA...')
@@ -152,5 +151,19 @@ if __name__=="__main__":
   parser_ex.add_argument("--labels",nargs="+",type=str,default="leiden",help="cluster names")
   parser_ex.set_defaults(func=_extract)
   
+  parser_tf= subparsers.add_parser('addMotif',help="add Motif Module")
+  parser_tf.add_argument('--path',"-d",type=str, default=None,help="anndata h5ad file")
+  parser_tf.add_argument("--organism",type=str,default="Human",help="Human or Mouse")
+  parser_tf.add_argument("--ntop","-n",type=int,default=1000,help="top number for progeny model")
+  parser_tf.add_argument('--outdir', '-o', type=str, default='output/', help='Output path')
+  parser_tf.set_defaults(func=addMotif)
+
+  parser_cy= subparsers.add_parser('classify',help="Use scorect method to predict celltype with reference markers")
+  parser_cy.add_argument('--path',"-d",type=str, default=None,help="anndata h5ad file")
+  parser_cy.add_argument('--groupby',"-g",type=str, default="leiden",help="which group use for predictor")
+  parser_cy.add_argument('--db',type=str,default=None,help="reference markers table")
+  parser_cy.add_argument('--outdir','-o',default="out",type=str,help='Output path')
+  parser_cy.set_defaults(func=classify)
+
   args=parser.parse_args()
   args.func(args)

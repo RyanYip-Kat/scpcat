@@ -14,3 +14,6 @@ matplotlib
 rpy2
 scrublet
 leidenalg
+progeny-py
+dorothea-py
+seaborn

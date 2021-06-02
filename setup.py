@@ -11,7 +11,7 @@ with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
 setup(name='scpcat',
-      version='1.0.0',
+      version='1.1.0',
       packages=find_packages(),
       description='Single-Cell RNA-seq Simple Pipeline Analysis',
       long_description='',
